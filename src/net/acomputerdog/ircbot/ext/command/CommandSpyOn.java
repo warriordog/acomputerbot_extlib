@@ -27,7 +27,7 @@ public class CommandSpyOn extends Command {
 
     @Override
     public boolean requiresAdmin() {
-        return true;
+        return false;
     }
 
     @Override
@@ -78,13 +78,13 @@ public class CommandSpyOn extends Command {
 
         @Override
         public void onMessage(IrcConnection irc, User sender, Channel target, String message) {
-            if (sender.equals(spyTarget)) {
+            if (sender.equals(spyTarget) && irc.getState().hasChannel(spySender.getName())) {
                 spySender.send(name + "[CHAT][" + target.getName() + "] " + message);
             }
         }
 
         private void start() {
-            spySender.send(name + "[INFO] Spying started.");
+            spySender.send(name + "[INFO] Spying started.  Use \"" + Config.COMMAND_PREFIX + "spyin *\" to stop.");
             bot.getConnection().addMessageListener(this);
         }
 
